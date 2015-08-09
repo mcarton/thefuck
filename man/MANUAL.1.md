@@ -63,16 +63,16 @@ debug = False
 list of enabled rules, like `DEFAULT_RULES:rm_root` or `sudo:no_command`
 
 ## THEFUCK_REQUIRE_CONFIRMATION
-require confirmation before running new command, `true/false`
+require confirmation before running new command, `true`/`false`
 
 ## THEFUCK_WAIT_COMMAND
 max amount of time in seconds for getting previous command output
 
 ## THEFUCK_NO_COLORS
-disable colored output, true/false
+disable colored output, `true`/`false`
 
 ## THEFUCK_PRIORITY
-priority of the rules, like no_command=9999:apt_get=100, rule with lower
+priority of the rules, like `no_command=9999:apt_get=100`, rule with lower
 priority will be matched first
 
 ## THEFUCK_DEBUG
@@ -90,7 +90,8 @@ You can find examples on <https://github.com/nvbn/thefuck>.
 
 You can report bugs on <https://github.com/nvbn/thefuck/issues>.
 Please export `THEFUCK_DEBUG=true` before executing The Fuck and include
-the complete output of The Fuck.
+the complete output of The Fuck as well as the version of The Fuck and Python
+and the shell you use.
 
 # SEE ALSO
 
