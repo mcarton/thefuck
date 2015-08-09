@@ -34,7 +34,7 @@ class Generic(object):
         return command_script
 
     def app_alias(self, fuck):
-        return "alias {0}='TF_ALIAS={0} eval $(thefuck $(fc -ln -1))'".format(fuck)
+        return "alias {0}='TF_ALIAS={0} eval $(thefuck --fix $(fc -ln -1))'".format(fuck)
 
     def _get_history_file_name(self):
         return ''
@@ -75,7 +75,7 @@ class Generic(object):
 
 class Bash(Generic):
     def app_alias(self, fuck):
-        return "TF_ALIAS={0} alias {0}='eval $(thefuck $(fc -ln -1));" \
+        return "TF_ALIAS={0} alias {0}='eval $(thefuck --fix $(fc -ln -1));" \
                " history -r'".format(fuck)
 
     def _parse_alias(self, alias):
@@ -119,7 +119,7 @@ class Fish(Generic):
                 "    set -l eval_script"
                 " (mktemp 2>/dev/null ; or mktemp -t 'thefuck')\n"
                 "    set -l fucked_up_commandd $history[1]\n"
-                "    thefuck $fucked_up_commandd > $eval_script\n"
+                "    thefuck --fix $fucked_up_commandd > $eval_script\n"
                 "    . $eval_script\n"
                 "    rm $eval_script\n"
                 "    if test $exit_code -ne 0\n"
@@ -159,7 +159,7 @@ class Fish(Generic):
 class Zsh(Generic):
     def app_alias(self, fuck):
         return "TF_ALIAS={0}" \
-               " alias {0}='eval $(thefuck $(fc -ln -1 | tail -n 1));" \
+               " alias {0}='eval $(thefuck --fix $(fc -ln -1 | tail -n 1));" \
                " fc -R'".format(fuck)
 
     def _parse_alias(self, alias):
@@ -194,7 +194,7 @@ class Tcsh(Generic):
     def app_alias(self, fuck):
         return ("alias {0} 'setenv TF_ALIAS {0} && "
                 "set fucked_cmd=`history -h 2 | head -n 1` && "
-                "eval `thefuck ${{fucked_cmd}}`'").format(fuck)
+                "eval `thefuck --fix ${{fucked_cmd}}`'").format(fuck)
 
     def _parse_alias(self, alias):
         name, value = alias.split("\t", 1)
