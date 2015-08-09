@@ -3,12 +3,17 @@ from setuptools import setup, find_packages
 import sys
 import os
 
-if os.environ.get('CONVERT_README'):
+if os.environ.get('USE_PANDOC'):
     import pypandoc
 
     long_description = pypandoc.convert('README.md', 'rst')
+
+    pypandoc.convert('man/MANUAL.1.md', 'man', extra_args=['-s'],
+                     outputfile='man/thefuck.1')
+    data_files = [("share/man/man1/", ["man/thefuck.1"])]
 else:
     long_description = ''
+    data_files = []
 
 version = sys.version_info[:2]
 if version < (2, 7):
@@ -39,6 +44,7 @@ setup(name='thefuck',
       zip_safe=False,
       install_requires=install_requires,
       extras_require=extras_require,
+      data_files=data_files,
       entry_points={'console_scripts': [
           'thefuck = thefuck.main:main',
           'thefuck-alias = thefuck.main:print_alias']})

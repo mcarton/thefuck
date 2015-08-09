@@ -63,4 +63,4 @@ target/
 .*.swp
 
 # man page
-man1
+man/thefuck.1
