@@ -88,11 +88,12 @@ def main():
 
     cmds = parser.add_mutually_exclusive_group(required=True)
 
+    alias_name = shells.thefuck_alias()
     cmds.add_argument('--alias', '-a',
-                      metavar='NAME',
+                      metavar='ALIAS_NAME=' + alias_name,
                       nargs='?',
                       help='output an example of alias for the current shell',
-                      const=shells.thefuck_alias(),
+                      const=alias_name,
                       action=AliasAction)
 
     cmds.add_argument('--fix', '-f',
@@ -102,7 +103,8 @@ def main():
                       help='fix the given command')
 
     cmds.add_argument('--help', '-h',
-                      action='help',
+                      nargs=0,
+                      action=HelpAction,
                       help='show this help message and exit')
 
     cmds.add_argument('--rules', '-r',
@@ -155,3 +157,15 @@ class ListAction(argparse.Action):
         print('Enabled rules:')
         for rule in get_rules(user_dir, settings):
             print('\t', rule.name)
+
+
+class HelpAction(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        msg = parser.format_help()
+
+        # fix confusing generated message
+        msg = msg.replace('CMD [CMD ...]', 'CMD')
+        msg = msg.replace('optional arguments:', 'arguments:')
+
+        parser._print_message(msg)
+        parser.exit()
