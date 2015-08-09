@@ -1,6 +1,7 @@
 import pytest
+import sys
 from subprocess import PIPE
-from mock import Mock
+from mock import Mock, patch
 from thefuck import main
 from tests.utils import Command
 
@@ -26,7 +27,7 @@ class TestGetCommand(object):
 
     def test_get_command_calls(self, Popen):
         assert main.get_command(Mock(env={}),
-                                ['thefuck', 'apt-get', 'search', 'vim']) \
+                                ['apt-get', 'search', 'vim']) \
                == Command('apt-get search vim', 'stdout', 'stderr')
         Popen.assert_called_once_with('apt-get search vim',
                                       shell=True,
@@ -35,8 +36,8 @@ class TestGetCommand(object):
                                       env={})
 
     @pytest.mark.parametrize('args, result', [
-        (['thefuck', 'ls', '-la'], 'ls -la'),
-        (['thefuck', 'ls'], 'ls')])
+        (['ls', '-la'], 'ls -la'),
+        (['ls'], 'ls')])
     def test_get_command_script(self, args, result):
         if result:
             assert main.get_command(Mock(env={}), args).script == result
