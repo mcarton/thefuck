@@ -1,5 +1,5 @@
 from . import logs, conf, types, shells, __version__
-from .corrector import get_corrected_commands
+from .corrector import get_corrected_commands, get_rules
 from .ui import select_command
 from os.path import expanduser
 from pathlib import Path
@@ -105,6 +105,11 @@ def main():
                       action='help',
                       help='show this help message and exit')
 
+    cmds.add_argument('--rules', '-r',
+                      nargs=0,
+                      action=ListAction,
+                      help='list enabled rules')
+
     cmds.add_argument('--version', '-v',
                       version=__version__,
                       action='version')
@@ -140,3 +145,13 @@ def print_alias(alias=None):
             alias = shells.thefuck_alias()
 
     print(shells.app_alias(alias))
+
+
+class ListAction(argparse.Action):
+    def __call__(self, parser, namespace, values, option_string=None):
+        user_dir = setup_user_dir()
+        settings = conf.get_settings(user_dir)
+
+        print('Enabled rules:')
+        for rule in get_rules(user_dir, settings):
+            print('\t', rule.name)
