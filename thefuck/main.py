@@ -1,4 +1,4 @@
-from . import logs, conf, types, shells
+from . import logs, conf, types, shells, __version__
 from .corrector import get_corrected_commands
 from .ui import select_command
 from os.path import expanduser
@@ -104,6 +104,10 @@ def main():
     cmds.add_argument('--help', '-h',
                       action='help',
                       help='show this help message and exit')
+
+    cmds.add_argument('--version', '-v',
+                      version=__version__,
+                      action='version')
 
     parser.parse_args()
 

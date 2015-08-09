@@ -2,6 +2,7 @@
 from setuptools import setup, find_packages
 import sys
 import os
+import thefuck
 
 if os.environ.get('CONVERT_README'):
     import pypandoc
@@ -20,13 +21,11 @@ elif (3, 0) < version < (3, 3):
           ' ({}.{} detected).'.format(*version))
     sys.exit(-1)
 
-VERSION = '2.6'
-
 install_requires = ['psutil', 'colorama', 'six']
 extras_require = {':python_version<"3.4"': ['pathlib']}
 
 setup(name='thefuck',
-      version=VERSION,
+      version=thefuck.__version__,
       description="Magnificent app which corrects your previous console command",
       long_description=long_description,
       author='Vladimir Iakovlev',

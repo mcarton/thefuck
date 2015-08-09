@@ -9,13 +9,13 @@ version = None
 
 def get_new_setup_py_lines():
     global version
-    with open('setup.py', 'r') as sf:
+    with open('thefuck/__init__.py', 'r') as sf:
         current_setup = sf.readlines()
     for line in current_setup:
-        if line.startswith('VERSION = '):
-            major, minor = re.findall(r"VERSION = '(\d+)\.(\d+)'", line)[0]
+        if line.startswith('__version__ = '):
+            major, minor = re.findall(r"__version__ = '(\d+)\.(\d+)'", line)[0]
             version = "{}.{}".format(major, int(minor) + 1)
-            yield "VERSION = '{}'\n".format(version)
+            yield "__version__ = '{}'\n".format(version)
         else:
             yield line
 
