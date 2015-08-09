@@ -124,7 +124,7 @@ To make them available immediately, run `source ~/.bashrc` (or your shell config
 sudo pip install thefuck --upgrade
 ```
 
-**Aliases changed in 1.34.**
+**Aliases changed in 2.7.**
 
 ## How it works
 
