@@ -25,9 +25,9 @@ def patch_getch(monkeypatch):
 
 def test_read_actions(patch_getch):
     patch_getch([  # Enter:
-                   '\n',
-                   # Enter:
-                   '\r',
+                   '\n', '\r',
+                   # Up, Down:
+                   'k', 'j',
                    # Ignored:
                    'x', 'y',
                    # Up:
@@ -36,8 +36,13 @@ def test_read_actions(patch_getch):
                    '\x1b', '[', 'B',
                    # Ctrl+C:
                    KeyboardInterrupt], )
-    assert list(islice(ui.read_actions(), 5)) \
-           == [ui.SELECT, ui.SELECT, ui.PREVIOUS, ui.NEXT, ui.ABORT]
+    assert list(islice(ui.read_actions(), 7)) \
+           == [ui.SELECT, ui.SELECT,
+               ui.PREVIOUS, ui.NEXT,
+               # ignored, ignored,
+               ui.PREVIOUS,
+               ui.NEXT,
+               ui.ABORT]
 
 
 def test_command_selector():

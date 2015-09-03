@@ -38,14 +38,18 @@ def read_actions():
 
         if ch in ('\n', '\r'):  # Enter
             yield SELECT
-
-        buffer.append(ch)
-        buffer = buffer[-3:]
-
-        if buffer == ['\x1b', '[', 'A']:  # ↑
-            yield PREVIOUS
-        elif buffer == ['\x1b', '[', 'B']:  # ↓
+        elif ch == 'j':
             yield NEXT
+        elif ch == 'k':
+            yield PREVIOUS
+        else:
+            buffer.append(ch)
+            buffer = buffer[-3:]
+
+            if buffer == ['\x1b', '[', 'A']:  # ↑
+                yield PREVIOUS
+            elif buffer == ['\x1b', '[', 'B']:  # ↓
+                yield NEXT
 
 
 class CommandSelector(object):
