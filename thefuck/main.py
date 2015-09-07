@@ -1,18 +1,21 @@
-from argparse import ArgumentParser
-from warnings import warn
-from pathlib import Path
-from os.path import expanduser
-from pprint import pformat
-import pkg_resources
-from subprocess import Popen, PIPE
-import os
-import sys
-from psutil import Process, TimeoutExpired
-import colorama
-import six
 from . import logs, conf, types, shells
 from .corrector import get_corrected_commands
 from .ui import select_command
+from argparse import ArgumentParser
+from os.path import expanduser
+from pathlib import Path
+from pprint import pformat
+from psutil import Process, TimeoutExpired
+from subprocess import Popen, PIPE
+from warnings import warn
+import colorama
+import os
+import pkg_resources
+import six
+import sys
+
+
+__version__ = pkg_resources.require('thefuck')[0].version
 
 
 def setup_user_dir():
@@ -89,6 +92,8 @@ def fix_command():
     user_dir = setup_user_dir()
     settings = conf.get_settings(user_dir)
     with logs.debug_time('Total', settings):
+        logs.debug('The Fuck version: {}'.format(__version__), settings)
+        logs.debug('Python version:\n{}'.format(sys.version), settings)
         logs.debug(u'Run with settings: {}'.format(pformat(settings)), settings)
 
         command = get_command(settings, sys.argv)
@@ -120,8 +125,7 @@ def main():
     parser = ArgumentParser(prog='thefuck')
     parser.add_argument('-v', '--version',
                         action='version',
-                        version='%(prog)s {}'.format(
-                            pkg_resources.require('thefuck')[0].version))
+                        version='%(prog)s {}'.format(__version__))
     parser.add_argument('-a', '--alias',
                         action='store_true',
                         help='[custom-alias-name] prints alias for current shell')
