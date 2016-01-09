@@ -202,6 +202,8 @@ class Fish(Generic):
 
 
 class Zsh(Generic):
+    zshrc = os.environ.get('ZDOTDIR', os.path.expanduser('~')) + '/.zshrc'
+
     def app_alias(self, fuck):
         return "TF_ALIAS={0}" \
                " alias {0}='PYTHONIOENCODING=utf-8 " \
@@ -215,7 +217,7 @@ class Zsh(Generic):
         return name, value
 
     @memoize
-    @cache('.zshrc')
+    @cache(zshrc)
     def get_aliases(self):
         proc = Popen(['zsh', '-ic', 'alias'], stdout=PIPE, stderr=DEVNULL)
         return dict(
@@ -237,7 +239,7 @@ class Zsh(Generic):
             return ''
 
     def how_to_configure(self):
-        return 'eval $(thefuck --alias)', '~/.zshrc'
+        return 'eval $(thefuck --alias)', self.zshrc
 
 
 class Tcsh(Generic):
