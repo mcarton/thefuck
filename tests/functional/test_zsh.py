@@ -31,6 +31,7 @@ def proc(request, spawnu, run_without_docker):
     proc.sendline(u'export SAVEHIST=100')
     proc.sendline(u'export HISTSIZE=100')
     proc.sendline(u'setopt INC_APPEND_HISTORY')
+    proc.sendline(u'setopt histignorespace')
     return proc
 
 

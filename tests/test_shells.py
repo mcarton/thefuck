@@ -91,14 +91,6 @@ class TestBash(object):
     def test_to_shell(self, shell):
         assert shell.to_shell('pwd') == 'pwd'
 
-    @pytest.mark.parametrize('entry, entry_utf8', [
-        ('ls', 'ls\n'),
-        (u'echo café', 'echo café\n')])
-    def test_put_to_history(self, entry, entry_utf8, builtins_open, shell):
-        shell.put_to_history(entry)
-        builtins_open.return_value.__enter__.return_value. \
-            write.assert_called_once_with(entry_utf8)
-
     def test_and_(self, shell):
         assert shell.and_('ls', 'cd') == 'ls && cd'
 
@@ -227,16 +219,6 @@ class TestZsh(object):
 
     def test_to_shell(self, shell):
         assert shell.to_shell('pwd') == 'pwd'
-
-    @pytest.mark.parametrize('entry, entry_utf8', [
-        ('ls', ': 1430707243:0;ls\n'),
-        (u'echo café', ': 1430707243:0;echo café\n')])
-    def test_put_to_history(self, entry, entry_utf8, builtins_open, mocker, shell):
-        mocker.patch('thefuck.shells.time',
-                     return_value=1430707243.3517463)
-        shell.put_to_history(entry)
-        builtins_open.return_value.__enter__.return_value. \
-            write.assert_called_once_with(entry_utf8)
 
     def test_and_(self, shell):
         assert shell.and_('ls', 'cd') == 'ls && cd'

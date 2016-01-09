@@ -102,9 +102,11 @@ class Generic(object):
 
 class Bash(Generic):
     def app_alias(self, fuck):
-        return "TF_ALIAS={0} alias {0}='PYTHONIOENCODING=utf-8 " \
-               "eval $(thefuck $(fc -ln -1));" \
-               " history -r'".format(fuck)
+        return "TF_ALIAS={0}" \
+               " alias {0}='PYTHONIOENCODING=utf-8" \
+               " TF_CMD=$(thefuck $(fc -ln -1)) && " \
+               " eval $TF_CMD &&" \
+               " history -s $TF_CMD'".format(fuck)
 
     def _parse_alias(self, alias):
         name, value = alias.replace('alias ', '', 1).split('=', 1)
@@ -127,6 +129,10 @@ class Bash(Generic):
 
     def _get_history_line(self, command_script):
         return u'{}\n'.format(command_script)
+
+    def put_to_history(self, command_script):
+        # handled by the alias
+        pass
 
     def how_to_configure(self):
         if os.path.join(os.path.expanduser('~'), '.bashrc'):
@@ -205,10 +211,13 @@ class Zsh(Generic):
     zshrc = os.environ.get('ZDOTDIR', os.path.expanduser('~')) + '/.zshrc'
 
     def app_alias(self, fuck):
-        return "TF_ALIAS={0}" \
-               " alias {0}='PYTHONIOENCODING=utf-8 " \
-               "eval $(thefuck $(fc -ln -1 | tail -n 1));" \
-               " fc -R'".format(fuck)
+        return ("TF_ALIAS={0}"
+                " alias {0}=' PYTHONIOENCODING=utf-8"
+                #            ^ this space is required so that "fuck" does not
+                #              appear in the history
+                " TF_CMD=$(thefuck $(fc -ln -1 | tail -n 1)) && "
+                " eval $TF_CMD &&"
+                " print -s $TF_CMD'").format(fuck)
 
     def _parse_alias(self, alias):
         name, value = alias.split('=', 1)
@@ -231,6 +240,10 @@ class Zsh(Generic):
 
     def _get_history_line(self, command_script):
         return u': {}:0;{}\n'.format(int(time()), command_script)
+
+    def put_to_history(self, command_script):
+        # handled by the alias
+        pass
 
     def _script_from_history(self, line):
         if ';' in line:
